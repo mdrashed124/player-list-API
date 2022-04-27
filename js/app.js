@@ -1,9 +1,20 @@
 const allPlayers =() =>{
+    document.getElementById('player-container').innerHTML=``
+    // document.getElementById('spinner').style.display= 'block'
     const searchValue = document.getElementById('search-box').value;
     const url = `https://www.thesportsdb.com/api/v1/json/2/searchplayers.php?p=${searchValue}`
     fetch(url)
     .then(response => response.json())
-    .then(data => showPlayerDetails(data.player))
+    .then(data =>{
+        if(data.player==null){
+            document.getElementById('spinner').style.display= 'block'
+            
+        }else{
+            showPlayerDetails(data.player);
+            document.getElementById('spinner').style.display= 'none'
+        }
+    }) 
+    // document.getElementById('spinner').style.display= 'none'
 }
 
 const showPlayerDetails = (players) => {
@@ -31,6 +42,24 @@ const details = (id) => {
     `
     fetch(url)
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => ShowDetails(data.players[0]))
+}
+
+const ShowDetails = (info) => {
+    console.log(info.strGender)
+    if(info.strGender == "Male"){
+        document.getElementById('male').style.display="block"
+        document.getElementById('female').style.display="none"
+    }
+    else{
+        document.getElementById('male').style.display="none"
+        document.getElementById('female').style.display="block"
+    }
+    document.getElementById('details-container').innerHTML=`
+    <img src="${info.strThumb}" class="rounded w-50 ml-5" alt="">
+    <h2 class="ml-5">Name: ${info.strPlayer}</h2>
+    <h3 class="ml-5">Team: ${info.strTeam}</h3>
+    `
+    console.log(info)
 }
 
